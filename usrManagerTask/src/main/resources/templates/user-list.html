@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <title>Users</title>
+</head>
+<body>
+<div th:switch="${users}">
+  <h2 th:case="null">No users found!</h2>
+  <div th:case="*">
+    <h2>Users</h2>
+    <table>
+      <thead>
+      <tr>
+        <th>Id</th>
+        <th>Username</th>
+        <th>Mail</th>
+        <th>Registration date</th>
+        <th>Last login date</th>
+        <th>Blocked</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="user : ${users}">
+        <td th:text="${user.id}"></td>
+        <td th:text="${user.username}"></td>
+        <td th:text="${user.mail}"></td>
+        <td th:text="${user.registrationDate}"></td>
+        <td th:text="${user.lastLoginDate}"></td>
+        <td th:text="${user.blocked}"></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</body>
+</html>
