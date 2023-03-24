@@ -54,7 +54,7 @@ public class AuthenticationFilter implements Filter {
                 filterChain.doFilter(httpRequest, httpResponse);
             } else {
                 User user = userRepository.findByUsername(principalName);
-                if (user == null) {
+                if (user == null || user.getDeleted() || user.getBlocked()) {
                     SecurityContextHolder.getContext().getAuthentication().setAuthenticated(false);
                     httpResponse.sendRedirect("/login");
                     filterChain.doFilter(httpRequest, httpResponse);

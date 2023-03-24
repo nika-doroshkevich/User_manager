@@ -2,7 +2,6 @@ package com.manager.usrmanagertask.service;
 
 import com.manager.usrmanagertask.enums.Role;
 import com.manager.usrmanagertask.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -14,25 +13,32 @@ import java.time.LocalDate;
 @Service
 public class DetailsService implements UserDetailsService {
 
-        @Autowired
-        private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-        @Override
-        public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public DetailsService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
-            com.manager.usrmanagertask.model.User user = userRepository.findByUsername(username);
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-            UserDetails ud =
-                    User.withDefaultPasswordEncoder()
-                            .username(user.getUsername())
-                            .password(user.getPassword())
-                            .roles(user.getRoles().stream().map(Role::name).toArray(String[]::new))
-                            .build();
+        com.manager.usrmanagertask.model.User user = userRepository.findByUsername(username);
 
-            LocalDate now = LocalDate.now();
-            user.setLastLoginDate(now);
-            userRepository.save(user);
-
-            return ud;
+        if (user.getBlocked()) {
+            throw new IllegalStateException("User is blocked!");
         }
+
+        UserDetails ud =
+                User.withDefaultPasswordEncoder()
+                        .username(user.getUsername())
+                        .password(user.getPassword())
+                        .roles(user.getRoles().stream().map(Role::name).toArray(String[]::new))
+                        .build();
+
+        LocalDate now = LocalDate.now();
+        user.setLastLoginDate(now);
+        userRepository.save(user);
+
+        return ud;
+    }
 }
