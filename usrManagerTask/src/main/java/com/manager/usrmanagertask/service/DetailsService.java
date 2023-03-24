@@ -1,26 +1,27 @@
 package com.manager.usrmanagertask.service;
 
-import com.manager.usrmanagertask.enums.Role;
 import com.manager.usrmanagertask.repository.UserRepository;
-import org.springframework.security.core.userdetails.User;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class DetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
-    public DetailsService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+
+        List<GrantedAuthority> authorities = new ArrayList<>();
 
         com.manager.usrmanagertask.model.User user = userRepository.findByUsername(username);
 
@@ -28,17 +29,17 @@ public class DetailsService implements UserDetailsService {
             throw new IllegalStateException("User is blocked!");
         }
 
-        UserDetails ud =
-                User.withDefaultPasswordEncoder()
-                        .username(user.getUsername())
-                        .password(user.getPassword())
-                        .roles(user.getRoles().stream().map(Role::name).toArray(String[]::new))
-                        .build();
-
         LocalDate now = LocalDate.now();
         user.setLastLoginDate(now);
         userRepository.save(user);
 
-        return ud;
+        return new org.springframework.security.core.userdetails.User(
+                user.getUsername(),
+                user.getPassword(),
+                true,
+                true,
+                true,
+                true,
+                authorities);
     }
 }

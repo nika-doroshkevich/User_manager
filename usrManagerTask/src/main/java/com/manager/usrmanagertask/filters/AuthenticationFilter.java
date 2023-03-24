@@ -1,7 +1,8 @@
 package com.manager.usrmanagertask.filters;
 
 import com.manager.usrmanagertask.model.User;
-import com.manager.usrmanagertask.repository.UserRepository;
+import com.manager.usrmanagertask.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,13 +17,10 @@ import java.util.List;
 
 @Component
 @Order(1)
+@RequiredArgsConstructor
 public class AuthenticationFilter implements Filter {
 
-    private final UserRepository userRepository;
-
-    public AuthenticationFilter(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    private final UserService userService;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -53,7 +51,7 @@ public class AuthenticationFilter implements Filter {
             if (principalName.equals("anonymousUser")) {
                 filterChain.doFilter(httpRequest, httpResponse);
             } else {
-                User user = userRepository.findByUsername(principalName);
+                User user = userService.loadUserByUsername(principalName);
                 if (user == null || user.getDeleted() || user.getBlocked()) {
                     SecurityContextHolder.getContext().getAuthentication().setAuthenticated(false);
                     httpResponse.sendRedirect("/login");
