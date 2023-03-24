@@ -2,38 +2,31 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
 <head>
     <title>Registration page</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="registrationFormStyle.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
 </head>
 <body>
-Registration
-<form th:action="@{/registration}" th:object="${user}" method="post">
 
-    <div th:if="${registrationError}">
-        <span th:text="${registrationError}"></span>
+<form th:action="@{/registration}" th:object="${userDto}" method="post">
+    <div class="container">
+
+        <div th:if="${registrationError}">
+            <span th:text="${registrationError}"></span>
+        </div>
+
+        <input type="text" th:field="*{username}" placeholder="Username" />
+        <div th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Username Error</div>
+
+        <input type="text" th:field="*{email}" placeholder="Email" />
+        <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Mail Error</div>
+
+        <input type="password" th:field="*{password}" placeholder="Password" />
+        <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password Error</div>
+
+        <button class="btn btn-success" type="submit">Register</button>
+
     </div>
-
-    <table>
-        <tr>
-            <td>Username:</td>
-            <td><input type="text" th:field="*{username}" placeholder="Username" /></td>
-            <td th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Username Error</td>
-        </tr>
-        <tr>
-            <td>Mail:</td>
-            <td><input type="text" th:field="*{mail}" placeholder="Mail" /></td>
-            <td th:if="${#fields.hasErrors('mail')}" th:errors="*{mail}">Mail Error</td>
-        </tr>
-
-        <tr>
-            <td>Password:</td>
-            <td><input type="text" th:field="*{password}" placeholder="Password" /></td>
-            <td th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password Error</td>
-        </tr>
-
-        <tr>
-            <td><button type="submit">Sign Up</button></td>
-        </tr>
-    </table>
-
 </form>
 <a th:href="@{/login}">Back</a>
 </body>

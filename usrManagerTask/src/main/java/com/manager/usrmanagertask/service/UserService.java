@@ -1,12 +1,13 @@
 package com.manager.usrmanagertask.service;
 
+import com.manager.usrmanagertask.enums.UserStatus;
 import com.manager.usrmanagertask.model.User;
 import com.manager.usrmanagertask.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.security.Principal;
 import java.util.List;
 
 @Service
@@ -15,21 +16,18 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public User findById(Long id) {
-        return userRepository.getOne(id);
+    public List<User> findByStatusIsNot(UserStatus userStatus) {
+        return userRepository.findByStatusIsNot(userStatus);
     }
 
-    public List<User> findByDeleted(Boolean deleted) {
-        return userRepository.findByDeleted(deleted);
-    }
-
+    @Transactional
     public User saveUser(User user) {
         return userRepository.save(user);
     }
 
-    public User loadUserByUsername(String username) throws UsernameNotFoundException {
+    public User getUserByUsername(String username) throws UsernameNotFoundException {
 
-        List<User> users = userRepository.findByUsernameAndDeleted(username, false);
+        List<User> users = userRepository.findByUsernameAndStatus(username, UserStatus.ACTIVE);
         if (users.size() > 1) {
             throw new IllegalStateException("More than one username with current username");
         }
@@ -39,5 +37,15 @@ public class UserService {
         }
 
         return users.get(0);
+    }
+
+    @Transactional
+    public void updateStatusForUsers(UserStatus userStatus, List<Integer> ids) {
+        userRepository.updateStatusForUsers(userStatus, ids);
+    }
+
+    @Transactional
+    public void deleteUsers(List<Integer> ids) {
+        userRepository.deleteUsers(ids);
     }
 }

@@ -1,18 +1,30 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" lang="en">
 <head>
-    <title>Login page</title>
+    <title>Please Log In</title>
 </head>
 <body>
-Login page
+<h1>Please Log In</h1>
+
+<div th:if="${error != null}" class="alert alert-danger" th:utext="${error}">
+    error
+</div>
+
 <form th:action="@{/login}" method="post">
-
-    <div th:if="${error != null}" class="alert alert-danger" th:utext="${session[SPRING_SECURITY_LAST_EXCEPTION]}">error</div>
-
-    <div><label> Username : <input type="text" name="username" placeholder="username"/> </label></div>
-    <div><label> Password: <input type="password" name="password" placeholder="password"/> </label></div>
-    <div><input type="submit" value="Sign In"/></div>
+    <div>
+        <label>
+            Username: <input type="text" name="username" placeholder="Username"/>
+        </label>
+    </div>
+    <div>
+        <label>
+            Password: <input type="password" name="password" placeholder="Password"/>
+        </label>
+    </div>
+    <input type="submit" value="Log in"/>
 </form>
-<p>Click <a th:href="@{/registration}">here</a> to registration.</p>
+
+<a th:href="@{/registration}">Registration</a>
+
 </body>
 </html>

@@ -1,5 +1,6 @@
 package com.manager.usrmanagertask.filters;
 
+import com.manager.usrmanagertask.enums.UserStatus;
 import com.manager.usrmanagertask.model.User;
 import com.manager.usrmanagertask.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -52,8 +53,9 @@ public class DeleteAndBlockUserFilter extends OncePerRequestFilter {
                 filterChain.doFilter(request, response);
                 return;
             } else {
-                User user = userService.loadUserByUsername(principalName);
-                if (user == null || user.getDeleted() || user.getBlocked()) {
+                User user = userService.getUserByUsername(principalName);
+                if (user == null || user.getStatus().equals(UserStatus.DELETED)
+                        || user.getStatus().equals(UserStatus.BLOCKED)) {
                     httpResponse.sendRedirect("/logout");
                 } else {
                     filterChain.doFilter(request, response);

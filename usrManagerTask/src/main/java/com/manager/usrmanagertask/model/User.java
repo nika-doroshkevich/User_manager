@@ -1,42 +1,46 @@
 package com.manager.usrmanagertask.model;
 
 import com.manager.usrmanagertask.enums.Role;
+import com.manager.usrmanagertask.enums.UserStatus;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
 import java.time.LocalDate;
 import java.util.Set;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "users")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private Integer id;
 
-    @NotEmpty(message = "Please, enter username.")
-    @Size(min=1, max=255, message = "Username length must be between 1 and 255.")
+    @Column(name = "username")
     private String username;
 
-    @NotNull(message = "Please, enter password.")
-    @Size(min=1, max=255, message = "Password length must be between 1 and 255.")
+    @Column(name = "password")
     private String password;
 
-    @NotNull(message = "Please, enter email.")
-    @Email(message = "Email must be valid.")
-    @Size(min=1, max=255, message = "Email length must be between 1 and 255.")
-    private String mail;
+    @Column(name = "email")
+    private String email;
 
+    @Column(name = "registration_date")
     private LocalDate registrationDate;
 
+    @Column(name = "last_login_date")
     private LocalDate lastLoginDate;
 
-    private Boolean blocked;
-
-    private Boolean deleted;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private UserStatus status;
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))

@@ -1,6 +1,7 @@
 package com.manager.usrmanagertask.config;
 
 import com.manager.usrmanagertask.filters.DeleteAndBlockUserFilter;
+import com.manager.usrmanagertask.security.CustomAuthenticationFailureHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,7 +24,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService userDetailsService;
     private final DeleteAndBlockUserFilter deleteAndBlockUserFilter;
-    private final AuthenticationFailureHandler authenticationFailureHandler;
+    private static final String[] WHITE_LIST_URLS = {"/favicon.ico"};
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -32,13 +33,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                     .antMatchers("/").authenticated()
                     .antMatchers("/registration").permitAll()
+                    .antMatchers("/login*").permitAll()
+                    .antMatchers(WHITE_LIST_URLS).permitAll()
                     .anyRequest().authenticated()
                 .and()
                     .formLogin()
                     .loginPage("/login")
-                    .failureUrl("/login?error=true")
-                    .failureHandler(authenticationFailureHandler)
-                    .permitAll()
+                    .failureHandler(authenticationFailureHandler())
                 .and()
                     .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                     .logoutSuccessUrl("/login").deleteCookies("JSESSIONID")
@@ -62,5 +63,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.authenticationProvider(authProvider());
+    }
+
+    @Bean
+    public AuthenticationFailureHandler authenticationFailureHandler() {
+        return new CustomAuthenticationFailureHandler();
     }
 }
