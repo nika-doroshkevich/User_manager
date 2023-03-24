@@ -8,6 +8,7 @@
 </head>
 <body>
 
+<!--Scripts-->
 <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
 <script>
   $(document).ready(function () {
@@ -19,58 +20,55 @@
 
 
 <div class="container">
-  <div class="row">
-    <div class="col-7">
+  <form name="logoutForm" th:action="@{/logout}" method="post">
+    <input type="submit" class="btn btn-secondary" value="Sign Out"/>
+  </form>
+
+  <p class="font-weight-bold"><label>User: <span th:text="${#authentication.name}"></span></label></p>
+
       <h2 class="text-center">Users</h2>
+
       <form method="post" th:action="@{/user/edit}" th:object="${editUsersDto}">
-        <div class="container">
-          <div class="row">
-            <div class="col"></div>
-            <div class="col">
-              <div class="float-end"><button type="submit" name="action" value="block">Block</button></div>
-            </div>
-            <div class="col">
-              <div class="float-end"><button type="submit" name="action" value="unblock">Unblock</button></div>
-            </div>
-            <div class="col">
-              <div class="float-end"><button type="submit" name="action" value="delete">Delete</button></div>
-            </div>
+
+        <nav class="navbar navbar-expand-lg bg-light">
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+            <button type="submit" class="btn btn-primary" name="action" value="block">Block</button>
+            <button type="submit" class="btn btn-primary" name="action" value="unblock">Unblock</button>
+            <button type="submit" class="btn btn-primary" name="action" value="delete">Delete</button>
+
           </div>
-          <div class="row">
-            <div class="col-12">
-              <table class="table">
-                <thead>
-                <tr>
-                  <th scope="col"><input id="selectAll" type="checkbox"/></th>
-                  <th scope="col">Id</th>
-                  <th scope="col">Username</th>
-                  <th scope="col">Email</th>
-                  <th scope="col">Registration date</th>
-                  <th scope="col">Last login date</th>
-                  <th scope="col">Status</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="user: ${users}">
-                  <td>
-                    <input type="checkbox" name="userIdCheckbox" th:field="*{userIds}" th:value="${user.id}"/>
-                  </td>
-                  <td th:text="${user.id}"></td>
-                  <td th:text="${user.username}"></td>
-                  <td th:text="${user.email}"></td>
-                  <td th:text="${user.registrationDate}"></td>
-                  <td th:text="${user.lastLoginDate}"></td>
-                  <td th:text="${user.status}">
-                </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
+        </nav>
+
+        <table class="table">
+          <thead>
+          <tr>
+            <th scope="col"><input id="selectAll" type="checkbox"/></th>
+            <th scope="col">Id</th>
+            <th scope="col">Username</th>
+            <th scope="col">Email</th>
+            <th scope="col">Registration date</th>
+            <th scope="col">Last login date</th>
+            <th scope="col">Status</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:each="user: ${users}">
+            <td>
+              <input type="checkbox" name="userIdCheckbox" th:field="*{userIds}" th:value="${user.id}"/>
+            </td>
+            <td th:text="${user.id}"></td>
+            <td th:text="${user.username}"></td>
+            <td th:text="${user.email}"></td>
+            <td th:text="${user.registrationDate}"></td>
+            <td th:text="${user.lastLoginDate}"></td>
+            <td th:text="${user.status}">
+          </tr>
+          </tbody>
+        </table>
+
       </form>
-    </div>
-    <div class="col-5"></div>
-  </div>
+
 </div>
 
 <!-- Optional JavaScript -->
