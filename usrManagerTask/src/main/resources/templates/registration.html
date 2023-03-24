@@ -4,12 +4,36 @@
     <title>Registration page</title>
 </head>
 <body>
-Add new user
-<form th:action="@{/registration}" method="post">
-    <div><label> Username : <input type="text" name="username" placeholder="username"/> </label></div>
-    <div><label> Mail : <input type="text" name="mail" placeholder="mail"/> </label></div>
-    <div><label> Password: <input type="password" name="password" placeholder="password"/> </label></div>
-    <div><input type="submit" value="Sign Up"/></div>
+Registration
+<form th:action="@{/registration}" th:object="${user}" method="post">
+
+    <div th:if="${registrationError}">
+        <span th:text="${registrationError}"></span>
+    </div>
+
+    <table>
+        <tr>
+            <td>Username:</td>
+            <td><input type="text" th:field="*{username}" placeholder="Username" /></td>
+            <td th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Username Error</td>
+        </tr>
+        <tr>
+            <td>Mail:</td>
+            <td><input type="text" th:field="*{mail}" placeholder="Mail" /></td>
+            <td th:if="${#fields.hasErrors('mail')}" th:errors="*{mail}">Mail Error</td>
+        </tr>
+
+        <tr>
+            <td>Password:</td>
+            <td><input type="text" th:field="*{password}" placeholder="Password" /></td>
+            <td th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password Error</td>
+        </tr>
+
+        <tr>
+            <td><button type="submit">Sign Up</button></td>
+        </tr>
+    </table>
+
 </form>
 <a th:href="@{/login}">Back</a>
 </body>

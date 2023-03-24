@@ -6,6 +6,9 @@
 <body>
 Login page
 <form th:action="@{/login}" method="post">
+
+    <div th:if="${error != null}" class="alert alert-danger" th:utext="${session[SPRING_SECURITY_LAST_EXCEPTION]}">error</div>
+
     <div><label> Username : <input type="text" name="username" placeholder="username"/> </label></div>
     <div><label> Password: <input type="password" name="password" placeholder="password"/> </label></div>
     <div><input type="submit" value="Sign In"/></div>

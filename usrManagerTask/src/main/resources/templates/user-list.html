@@ -10,6 +10,7 @@
     <input type="submit" value="Sign Out"/>
   </form>
 </div>
+
 <div th:switch="${users}">
   <h2 th:case="null">No users found!</h2>
   <div th:case="*">
@@ -33,9 +34,11 @@
         <td th:text="${user.registrationDate}"></td>
         <td th:text="${user.lastLoginDate}"></td>
         <td th:text="${user.blocked}"></td>
+
         <td><a th:href="@{user-block/{id}(id=${user.id})}">Block</a></td>
         <td><a th:href="@{user-unblock/{id}(id=${user.id})}">Unblock</a></td>
         <td><a th:href="@{user-delete/{id}(id=${user.id})}">Delete</a></td>
+
       </tr>
       </tbody>
     </table>

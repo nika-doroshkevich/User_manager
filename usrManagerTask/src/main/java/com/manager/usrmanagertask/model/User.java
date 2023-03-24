@@ -4,6 +4,7 @@ import com.manager.usrmanagertask.enums.Role;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 import java.time.LocalDate;
 import java.util.Set;
 
@@ -16,10 +17,17 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @NotEmpty(message = "Please, enter username.")
+    @Size(min=1, max=255, message = "Username length must be between 1 and 255.")
     private String username;
 
+    @NotNull(message = "Please, enter password.")
+    @Size(min=1, max=255, message = "Password length must be between 1 and 255.")
     private String password;
 
+    @NotNull(message = "Please, enter email.")
+    @Email(message = "Email must be valid.")
+    @Size(min=1, max=255, message = "Email length must be between 1 and 255.")
     private String mail;
 
     private LocalDate registrationDate;

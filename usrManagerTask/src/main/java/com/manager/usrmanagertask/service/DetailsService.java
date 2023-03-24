@@ -17,13 +17,18 @@ import java.util.List;
 public class DetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
+    private final UserService userService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         List<GrantedAuthority> authorities = new ArrayList<>();
 
-        com.manager.usrmanagertask.model.User user = userRepository.findByUsername(username);
+        com.manager.usrmanagertask.model.User user = userService.loadUserByUsername(username);
+
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found!");
+        }
 
         if (user.getBlocked()) {
             throw new IllegalStateException("User is blocked!");

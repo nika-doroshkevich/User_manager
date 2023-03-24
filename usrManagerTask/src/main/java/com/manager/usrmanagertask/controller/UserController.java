@@ -32,6 +32,7 @@ public class UserController {
         if (user.getUsername().equals(auth.getName())){
             SecurityContextHolder.getContext().getAuthentication().setAuthenticated(false);
         }
+
         user.setDeleted(true);
         userService.saveUser(user);
         return "redirect:/";
@@ -44,6 +45,7 @@ public class UserController {
         if (user.getUsername().equals(auth.getName())){
             SecurityContextHolder.getContext().getAuthentication().setAuthenticated(false);
         }
+
         user.setBlocked(true);
         userService.saveUser(user);
         return "redirect:/";
@@ -51,11 +53,7 @@ public class UserController {
 
     @GetMapping("user-unblock/{id}")
     public String unblockUser(@PathVariable("id") Long id) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.findById(id);
-        if (user.getUsername().equals(auth.getName())){
-            SecurityContextHolder.getContext().getAuthentication().setAuthenticated(false);
-        }
         user.setBlocked(false);
         userService.saveUser(user);
         return "redirect:/";

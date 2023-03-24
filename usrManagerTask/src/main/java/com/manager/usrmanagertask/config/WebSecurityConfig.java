@@ -1,5 +1,6 @@
 package com.manager.usrmanagertask.config;
 
+import com.manager.usrmanagertask.filters.DeleteAndBlockUserFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,6 +12,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
@@ -19,10 +22,13 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService userDetailsService;
+    private final DeleteAndBlockUserFilter deleteAndBlockUserFilter;
+    private final AuthenticationFailureHandler authenticationFailureHandler;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                .addFilterBefore(deleteAndBlockUserFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
                     .antMatchers("/").authenticated()
                     .antMatchers("/registration").permitAll()
@@ -30,6 +36,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                     .formLogin()
                     .loginPage("/login")
+                    .failureUrl("/login?error=true")
+                    .failureHandler(authenticationFailureHandler)
                     .permitAll()
                 .and()
                     .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
