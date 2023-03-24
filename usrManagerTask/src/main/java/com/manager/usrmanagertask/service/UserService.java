@@ -16,7 +16,15 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
+    public User findById(Long id) {
+        return userRepository.getOne(id);
+    }
+
     public List<User> findAll() {
         return userRepository.findAll();
+    }
+
+    public void deleteById(Long id) {
+        userRepository.deleteById(id);
     }
 }

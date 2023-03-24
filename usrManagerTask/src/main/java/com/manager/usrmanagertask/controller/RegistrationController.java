@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Map;
 
@@ -26,6 +27,10 @@ public class RegistrationController {
 
     @PostMapping("/registration")
     public String addUser(User user, Map<String, Object> model) {
+        if (user.getUsername().equals("anonymousUser")) {
+            model.put("message", "User exists!");
+            return "registration";
+        }
         User userFromDb = userRepository.findByUsername(user.getUsername());
 
         if (userFromDb != null) {
@@ -34,8 +39,13 @@ public class RegistrationController {
         }
 
         user.setRoles(Collections.singleton(Role.USER));
+        user.setBlocked(false);
+
+        //Set registration date
+        LocalDate now = LocalDate.now();
+        user.setRegistrationDate(now);
+
         userRepository.save(user);
         return "redirect:/login";
     }
 }
-

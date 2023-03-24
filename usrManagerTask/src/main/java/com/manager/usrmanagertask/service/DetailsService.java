@@ -9,24 +9,30 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+
 @Service
 public class DetailsService implements UserDetailsService {
 
-    @Autowired
-    private UserRepository userRepository;
+        @Autowired
+        private UserRepository userRepository;
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        @Override
+        public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        com.manager.usrmanagertask.model.User user = userRepository.findByUsername(username);
+            com.manager.usrmanagertask.model.User user = userRepository.findByUsername(username);
 
-        UserDetails ud =
-                User.withDefaultPasswordEncoder()
-                        .username(user.getUsername())
-                        .password(user.getPassword())
-                        .roles(user.getRoles().stream().map(Role::name).toArray(String[]::new))
-                        .build();
+            UserDetails ud =
+                    User.withDefaultPasswordEncoder()
+                            .username(user.getUsername())
+                            .password(user.getPassword())
+                            .roles(user.getRoles().stream().map(Role::name).toArray(String[]::new))
+                            .build();
 
-        return ud;
-    }
+            LocalDate now = LocalDate.now();
+            user.setLastLoginDate(now);
+            userRepository.save(user);
+
+            return ud;
+        }
 }

@@ -4,7 +4,7 @@ import com.manager.usrmanagertask.enums.Role;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.Set;
 
 @Data
@@ -22,9 +22,9 @@ public class User {
 
     private String mail;
 
-    private Date registrationDate;
+    private LocalDate registrationDate;
 
-    private Date lastLoginDate;
+    private LocalDate lastLoginDate;
 
     private Boolean blocked;
 
