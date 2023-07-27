@@ -15,7 +15,7 @@ ________________________________________________________________________________
 ### Required environment :wrench:
 
 1. __Java 11__
-2. MySQL 5.7.36
+2. MySQL 5.7
 3. (optional) Maven 3.8
 4. (optional) Tomcat 8
 5. (optional) Git
